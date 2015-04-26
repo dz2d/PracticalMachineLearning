@@ -1,0 +1,47 @@
+Background
+
+The goal of this assignment is to predict the manner in which various exercises were performed based on sensor data. The outcome variable represents the 5 ways in which the exercises were performed. Only one of the outcomes were the “correct” way to perform the exercises. The other outcomes represent common mistake. The data for this analysis comes 6 subjects who performed the exercises under supervision. They wore sensors on their arms, forearms, and a belt. Additionally, there was a sensor on the dumbbell used in the exercises. More information about the experiment and data can be found at http://groupware.les.inf.puc-rio.br/har.
+
+Building the Model
+The first step is to explore the data and clean it up. This included the following actions:
+plotting variables to see their distribution with the “classe” variable
+computing a correlation matrix to investigate the relationships among the possible predictors
+identifying variables with zero or near zero variances and deleting these variables. Specifically, the “amplitude” variables were indicated by the function as having zero or near zero variance.
+identifying rows that were summaries of exercise (e.g., had values for the average, minimum, maximum, etc variables) and deleting these. These row were identified as ones having the “new_window” variable with a value of “yes.”
+identifying the summary variables and deleting these.
+
+As a result of taking the actions above the training data had 19216 observations and 49 variables.
+
+I then used the PCA to reduce the 48 predictors to 23 which accounted for 95% of the variance in the original 48 variable. This new set of predictors was then used to train a model using the Random Forest method.
+
+Confusion matrix:
+     A    B    C    D    E class.error
+A 5447   12    6    3    3 0.004386767
+B   44 3643   27    0    4 0.020172136
+C    2   35 3291   22    2 0.018198091
+D    5    4   94 3038    6 0.034636161
+E    0   10   14   10 3494 0.009637188
+
+The best model had the following results.
+Accuracy   Kappa      Accuracy SD  Kappa SD   
+0.9749603  0.9683150  0.001973862  0.002490853
+
+The two most influential variables were PC8 and PC12. The first plot below shows that PC8 alone does not do a good job of predicting. Each value of “classe” significantly overlaps the values of PC8. Using PC8 and PC12 does little to improve the visual identification as can be seen in the second plot.
+
+<Image 1 goes here>
+
+<Image 2 goes here>
+
+
+Improving the Model with Cross Validation
+25 Bootstrap samples were used. This was very useful as it provides the mechanism to compute the out of bag error rate which is basically the same as performing cross validation to get an accuracy measure.
+
+The expected out of sample error
+Random Forest computes an out of bag error rate. For the model, it was 1.58% which is very good. However, this generally represents an optimistic view of the error. However, due to the cross validation, this rate is better than the performance of individual models. The performance on the test data was very good at 95% (19/20).
+
+Rationale for Choices Made
+The key decisions made for this analysis were several. First, was a decision about how to reduce the dataset. Initially, I felt the summary records and variables should be used. The rationale for this was that all of the individual records for a single performance of an exercise would all have the same value for the outcome variable. This would inflate the N and misrepresent the unit of analysis. However, after trying the approach and then looking at the test data, I realized using the summary records and variables would not work.
+
+As a result, I then focused on using the raw measurement variables and raw measurement records. With this focus and after cleaning the data further, the dataset contained scaled data amenable to reduction via principal components analysis (PCA). This turned out to be effective.
+
+The selection of Random Forest as the model was driven by the classification nature of the problem. Furthermore, investigation of plots suggested a highly nonlinear and irregular relationship of the predictor variables to the outcome variable.
