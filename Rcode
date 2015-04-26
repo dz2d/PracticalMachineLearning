@@ -1,0 +1,30 @@
+data<-read.csv("C:\\Users\\Dave\\Documents\\Practical Machine Learning Course\\Final Assignment\\pml-training.csv")
+#eliminate summary rows
+data<-data[(data$new_window=="no"),]
+#columns of rawdata
+rawData<-data[,c(8:10, 37:48, 60:68, 81:86, 99:101, 113:124,151:160)]
+#Identify Near Zero Var variables
+nsv<-nearZeroVar(rawData,saveMetrics=TRUE)
+#drop Amplitude vars
+rawData2 <- rawData[-grep("^amp", colnames(rawData))]
+#train on the data
+out<-preProcess(rawData2[,1:48],method="pca",na.remove=TRUE)
+pcaRawData2<-predict(out,rawData2[,1:48])
+modelfittr<-train(rawData2[,49]~.,method="rf",data=pcaRawData2)
+print(modelfittr$finalModel)
+print(modelfittr$results)
+#predict on the test data
+testData<-read.csv("C:\\Users\\Dave\\Documents\\Practical Machine Learning Course\\Final Assignment\\pml-testing.csv")
+testData<-testData[,c(8:10, 37:48, 60:68, 81:86, 99:101, 113:124,151:160)]
+testData2 <- testData[-grep("^amp", colnames(testData))]
+pcatestData2<-predict(out,testData2[,1:48])
+testPred<-predict(modelfittr$finalModel,pcatestData2)
+#end of assignment
+
+pml_write_files = function(x){
+  n = length(x)
+  for(i in 1:n){
+    filename = paste0("problem_id_",i,".txt")
+    write.table(x[i],file=filename,quote=FALSE,row.names=FALSE,col.names=FALSE)
+  }
+}
