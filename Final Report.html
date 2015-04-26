@@ -1,0 +1,160 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=windows-1252">
+	<TITLE></TITLE>
+	<META NAME="GENERATOR" CONTENT="OpenOffice 4.1.1  (Win32)">
+	<META NAME="AUTHOR" CONTENT="Dave Zubrow">
+	<META NAME="CREATED" CONTENT="20150424;21460000">
+	<META NAME="CHANGED" CONTENT="0;0">
+	<STYLE TYPE="text/css">
+	<!--
+		@page { margin: 0.79in }
+		P { margin-bottom: 0.08in; color: #000000 }
+		P.western { font-family: "Times New Roman", serif; font-size: 12pt; so-language: en-US }
+		P.cjk { font-family: "Times New Roman", serif; font-size: 12pt; so-language: zh-CN }
+		P.ctl { font-family: "Times New Roman", serif }
+		PRE { color: #000000 }
+		PRE.western { so-language: en-US }
+		PRE.cjk { so-language: zh-CN }
+		PRE.ctl { font-family: "NSimSun", monospace; font-size: 12pt }
+		A:link { so-language: zxx }
+	-->
+	</STYLE>
+</HEAD>
+<BODY LANG="en-US" TEXT="#000000" DIR="LTR" STYLE="border: none; padding: 0in">
+<P CLASS="western" STYLE="margin-bottom: 0in; line-height: 0.22in"><FONT COLOR="#333333"><FONT FACE="Helvetica Neue, Helvetica"><FONT SIZE=2 STYLE="font-size: 10pt"><B>Background</B></FONT></FONT></FONT></P>
+<P CLASS="western" STYLE="margin-bottom: 0in; line-height: 0.22in"><BR>
+</P>
+<P CLASS="western" STYLE="margin-bottom: 0in; line-height: 0.22in"><FONT COLOR="#333333"><FONT FACE="Helvetica Neue, Helvetica"><FONT SIZE=2 STYLE="font-size: 10pt">The
+goal of this assignment is to predict the manner in which various
+exercises were performed based on sensor data.  The outcome variable
+represents the 5 ways in which the exercises were performed.  Only
+one of the outcomes were the &ldquo;correct&rdquo; way to perform the
+exercises.  The other outcomes represent common mistake.  The data
+for this analysis comes 6 subjects who performed the exercises under
+supervision.  They wore sensors on their arms, forearms, and a belt. 
+Additionally, there was a sensor on the dumbbell used in the
+exercises. More information about the experiment and data can be
+found at <FONT COLOR="#0367b0"><SPAN STYLE="text-decoration: none"><SPAN LANG="zxx"><SPAN STYLE="font-style: normal"><SPAN STYLE="font-weight: normal"><A HREF="http://groupware.les.inf.puc-rio.br/har">http://groupware.les.inf.puc-rio.br/har</A>.</SPAN></SPAN></SPAN></SPAN></FONT></FONT></FONT></FONT></P>
+<P CLASS="western" STYLE="margin-bottom: 0in; line-height: 0.22in"><BR>
+</P>
+<P CLASS="western" STYLE="margin-bottom: 0in; line-height: 0.22in"><FONT COLOR="#333333"><FONT FACE="Helvetica Neue, Helvetica"><FONT SIZE=2 STYLE="font-size: 10pt"><B>Building
+the Model</B></FONT></FONT></FONT></P>
+<P CLASS="western" STYLE="margin-bottom: 0in; line-height: 0.22in"><FONT COLOR="#333333"><FONT FACE="Helvetica Neue, Helvetica"><FONT SIZE=2 STYLE="font-size: 10pt">The
+first step is to explore the data and clean it up. This included the
+following actions:</FONT></FONT></FONT></P>
+<UL>
+	<LI><P CLASS="western" STYLE="margin-bottom: 0in; line-height: 0.22in">
+	<FONT COLOR="#333333"><FONT FACE="Helvetica Neue, Helvetica"><FONT SIZE=2 STYLE="font-size: 10pt">plotting
+	variables to see their distribution with the &ldquo;classe&rdquo;
+	variable</FONT></FONT></FONT></P>
+	<LI><P CLASS="western" STYLE="margin-bottom: 0in; line-height: 0.22in">
+	<FONT COLOR="#333333"><FONT FACE="Helvetica Neue, Helvetica"><FONT SIZE=2 STYLE="font-size: 10pt">computing
+	a correlation matrix to investigate the relationships among the
+	possible predictors</FONT></FONT></FONT></P>
+	<LI><P CLASS="western" STYLE="margin-bottom: 0in; line-height: 0.22in">
+	<FONT COLOR="#333333"><FONT FACE="Helvetica Neue, Helvetica"><FONT SIZE=2 STYLE="font-size: 10pt">identifying
+	variables with zero or near zero variances and deleting these
+	variables. Specifically, the &ldquo;amplitude&rdquo; variables were
+	indicated by the function as having zero or near zero variance.</FONT></FONT></FONT></P>
+	<LI><P CLASS="western" STYLE="margin-bottom: 0in; line-height: 0.22in">
+	<FONT COLOR="#333333"><FONT FACE="Helvetica Neue, Helvetica"><FONT SIZE=2 STYLE="font-size: 10pt">identifying
+	rows that were summaries of exercise (e.g., had values for the
+	average, minimum, maximum, etc variables) and deleting these. These
+	row were identified as ones having the &ldquo;new_window&rdquo;
+	variable with a value of &ldquo;yes.&rdquo;</FONT></FONT></FONT></P>
+	<LI><P CLASS="western" STYLE="margin-bottom: 0in; line-height: 0.22in">
+	<FONT COLOR="#333333"><FONT FACE="Helvetica Neue, Helvetica"><FONT SIZE=2 STYLE="font-size: 10pt">identifying
+	the summary variables and deleting these.</FONT></FONT></FONT></P>
+</UL>
+<P CLASS="western" STYLE="margin-bottom: 0in; line-height: 0.22in"><BR>
+</P>
+<P CLASS="western" STYLE="margin-bottom: 0in; line-height: 0.22in"><FONT COLOR="#333333"><FONT FACE="Helvetica Neue, Helvetica"><FONT SIZE=2 STYLE="font-size: 10pt">As
+a result of taking the actions above the training data had 19216
+observations and 49 variables.</FONT></FONT></FONT></P>
+<P CLASS="western" STYLE="margin-bottom: 0in; line-height: 0.22in"><BR>
+</P>
+<P CLASS="western" STYLE="margin-bottom: 0in; line-height: 0.22in"><FONT COLOR="#333333"><FONT FACE="Helvetica Neue, Helvetica"><FONT SIZE=2 STYLE="font-size: 10pt">I
+then used the PCA to reduce the 48 predictors to 23 which accounted
+for 95% of the variance in the original 48 variable.  This new set of
+predictors was then used to train a model using the Random Forest
+method.</FONT></FONT></FONT></P>
+<P CLASS="western" STYLE="margin-bottom: 0in; line-height: 0.22in"><BR>
+</P>
+<PRE CLASS="western" STYLE="line-height: 0.22in"><A NAME="rstudio_console_output"></A><FONT COLOR="#333333"><FONT FACE="Helvetica Neue, Helvetica"><FONT SIZE=2 STYLE="font-size: 10pt">Confusion matrix:</FONT></FONT></FONT>
+     <FONT FACE="Lucida Console">A    B    C    D    E class.error</FONT>
+<FONT FACE="Lucida Console">A 5447   12    6    3    3 0.004386767</FONT>
+<FONT FACE="Lucida Console">B   44 3643   27    0    4 0.020172136</FONT>
+<FONT FACE="Lucida Console">C    2   35 3291   22    2 0.018198091</FONT>
+<FONT FACE="Lucida Console">D    5    4   94 3038    6 0.034636161</FONT>
+<FONT FACE="Lucida Console">E    0   10   14   10 3494 0.009637188</FONT></PRE><P CLASS="western" STYLE="margin-bottom: 0in; line-height: 0.22in">
+<BR>
+</P>
+<P CLASS="western" STYLE="margin-bottom: 0in; line-height: 0.22in"><FONT COLOR="#333333"><FONT FACE="Helvetica Neue, Helvetica"><FONT SIZE=2 STYLE="font-size: 10pt">The
+best model had the following results.</FONT></FONT></FONT></P>
+<PRE CLASS="western" STYLE="line-height: 0.22in"><FONT COLOR="#333333"><FONT FACE="Lucida Console">Accuracy   Kappa      Accuracy SD  Kappa SD   </FONT></FONT>
+<FONT FACE="Lucida Console">0.9749603  0.9683150  0.001973862  0.002490853</FONT></PRE><P CLASS="western" STYLE="margin-bottom: 0in; line-height: 0.22in">
+<BR>
+</P>
+<P CLASS="western" STYLE="margin-bottom: 0in; line-height: 0.22in"><FONT COLOR="#333333"><FONT FACE="Helvetica Neue, Helvetica"><FONT SIZE=2 STYLE="font-size: 10pt">The
+two most influential variables were PC8 and PC12.  The first plot
+below shows that PC8 alone does not do a good job of predicting. 
+Each value of &ldquo;classe&rdquo; significantly overlaps the values
+of PC8.  Using PC8 and PC12 does little to improve the visual
+identification as can be seen in the second plot.</FONT></FONT></FONT></P>
+<P CLASS="western" STYLE="margin-bottom: 0in; line-height: 0.22in"><BR>
+</P>
+<P CLASS="western" STYLE="margin-bottom: 0in; line-height: 0.22in"><IMG SRC="Final%20Report_html_372223a7.jpg" ALIGN=LEFT WIDTH=625 HEIGHT=290 BORDER=0><BR CLEAR=LEFT><BR>
+</P>
+<P CLASS="western" STYLE="margin-bottom: 0in; line-height: 0.22in"><BR>
+</P>
+<P CLASS="western" STYLE="margin-bottom: 0in; line-height: 0.22in"><FONT COLOR="#333333"><FONT FACE="Helvetica Neue, Helvetica"><FONT SIZE=2 STYLE="font-size: 10pt"><B>Improving
+the Model with Cross Validation</B></FONT></FONT></FONT></P>
+<P CLASS="western" STYLE="margin-bottom: 0in; line-height: 0.22in"><FONT FACE="Lucida Console"><FONT SIZE=2>25
+Bootstrap samples were used. This was very useful as it provides the
+mechanism to compute the out of bag error rate which is basically the
+same as performing cross validation to get an accuracy measure.</FONT></FONT></P>
+<P CLASS="western" STYLE="margin-bottom: 0in; line-height: 0.22in"><BR>
+</P>
+<P CLASS="western" STYLE="margin-bottom: 0in; line-height: 0.22in"><FONT COLOR="#333333"><FONT FACE="Helvetica Neue, Helvetica"><FONT SIZE=2 STYLE="font-size: 10pt"><B>The
+expected out of sample error</B></FONT></FONT></FONT></P>
+<P CLASS="western" STYLE="margin-bottom: 0in; line-height: 0.22in"><FONT COLOR="#333333"><FONT FACE="Helvetica Neue, Helvetica"><FONT SIZE=2 STYLE="font-size: 10pt">Random
+Forest computes an out of bag error rate.  For the model, it was 
+</FONT></FONT></FONT><FONT COLOR="#000000"><FONT FACE="Lucida Console"><FONT SIZE=2>1.58%
+which is very good.  However, this generally represents an optimistic
+view of the error.  However, due to the cross validation, this rate
+is better than the performance of individual models.  The performance
+on the test data was very good at 95% (19/20).</FONT></FONT></FONT></P>
+<P CLASS="western" STYLE="margin-bottom: 0in; line-height: 0.22in"><BR>
+</P>
+<P CLASS="western" STYLE="margin-bottom: 0in; line-height: 0.22in"><FONT COLOR="#333333"><FONT FACE="Helvetica Neue, Helvetica"><FONT SIZE=2 STYLE="font-size: 10pt"><B>Rationale
+for Choices Made</B></FONT></FONT></FONT></P>
+<P CLASS="western" STYLE="margin-bottom: 0in; line-height: 0.22in"><FONT COLOR="#333333"><FONT FACE="Helvetica Neue, Helvetica"><FONT SIZE=2 STYLE="font-size: 10pt">The
+key decisions made for this analysis were several.  First, was a
+decision about how to reduce the dataset.  Initially, I felt the
+summary records and variables should be used.  The rationale for this
+was that all of the individual records for a single performance of an
+exercise would all have the same value for the outcome variable. 
+This would inflate the N and misrepresent the unit of analysis. 
+However, after trying the approach and then looking at the test data,
+I realized using the summary records and variables would not work.</FONT></FONT></FONT></P>
+<P CLASS="western" STYLE="margin-bottom: 0in; line-height: 0.22in"><BR>
+</P>
+<P CLASS="western" STYLE="margin-bottom: 0in; line-height: 0.22in"><FONT COLOR="#333333"><FONT FACE="Helvetica Neue, Helvetica"><FONT SIZE=2 STYLE="font-size: 10pt">As
+a result, I then focused on using the raw measurement variables and
+raw measurement records. With this focus and after cleaning the data
+further, the dataset contained scaled data amenable to reduction via
+principal components analysis (PCA).  This turned out to be
+effective.</FONT></FONT></FONT></P>
+<P CLASS="western" STYLE="margin-bottom: 0in; line-height: 0.22in"><BR>
+</P>
+<P CLASS="western" STYLE="margin-bottom: 0in; line-height: 0.22in"><FONT COLOR="#333333"><FONT FACE="Helvetica Neue, Helvetica"><FONT SIZE=2 STYLE="font-size: 10pt">The
+selection of Random Forest as the model was driven by the
+classification nature of the problem.  Furthermore, investigation of
+plots suggested a highly nonlinear and irregular relationship of the
+predictor variables to the outcome variable.</FONT></FONT></FONT></P>
+<P CLASS="western" STYLE="margin-bottom: 0in; line-height: 0.22in"><BR>
+</P>
+</BODY>
+</HTML>
